@@ -1,22 +1,15 @@
-import fs from 'fs';
+import { CsvFileReader } from './classes/CsvFileReader';
+import { MatchOutcomes } from './enums/MatchOutcomes';
 
-enum MatchOutcome {
-  HomeWin = 'H',
-  AwayWin = 'A',
-  Draw = 'D',
-}
-
-const matches = fs
-  .readFileSync('football.csv', { encoding: 'utf-8' }) // reads file returns string
-  .split('\n') // creates rows as string
-  .map((row) => row.split(',')); // arrays columns
+const reader = new CsvFileReader('football.csv');
+reader.read();
 
 let manUnitedWins = 0;
 
-matches.map((row) => {
-  if (row[1] === 'Man United' && row[5] === MatchOutcome.HomeWin) {
+reader.data.map((row) => {
+  if (row[1] === 'Man United' && row[5] === MatchOutcomes.HomeWin) {
     manUnitedWins++;
-  } else if (row[2] === 'Man United' && row[5] === MatchOutcome.AwayWin) {
+  } else if (row[2] === 'Man United' && row[5] === MatchOutcomes.AwayWin) {
     manUnitedWins++;
   }
 });
