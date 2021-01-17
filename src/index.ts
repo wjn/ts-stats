@@ -1,17 +1,24 @@
+import { MostLosses } from './classes/Analyzers/MostLosses';
+import { MostWins } from './classes/Analyzers/MostWins';
+import { SeasonStandings } from './classes/Analyzers/SeasonStandings';
+import { StatLeader } from './classes/Analyzers/StatLeader';
+import { WinsAnalysis } from './classes/Analyzers/WinsAnalysis';
 import { CsvFileReader } from './classes/CsvFileReader';
-import { MatchOutcomes } from './enums/MatchOutcomes';
+import { MatchReader } from './classes/MatchReader';
+import { ConsoleReport } from './classes/ReportTargets/ConsoleReport';
+import { Summary } from './classes/Summary';
+import { Stats } from './enums/Stats';
 
-const reader = new CsvFileReader('football.csv');
-reader.read();
+// Identify the method and data to use
+const csvFileReader = new CsvFileReader('football.csv');
+// Process Football matches into an array of tuples
+const matchReader = new MatchReader(csvFileReader);
+matchReader.load();
 
-let manUnitedWins = 0;
+// Run the analysis
+const stat = Stats.wins;
+const statLeader = new Summary(new StatLeader(stat), new ConsoleReport());
+statLeader.buildAndPrintReport(matchReader.matches);
 
-reader.data.map((row) => {
-  if (row[1] === 'Man United' && row[5] === MatchOutcomes.HomeWin) {
-    manUnitedWins++;
-  } else if (row[2] === 'Man United' && row[5] === MatchOutcomes.AwayWin) {
-    manUnitedWins++;
-  }
-});
-
-console.log(`Man United won ${manUnitedWins} games.`);
+const standings = new Summary(new SeasonStandings(stat), new ConsoleReport());
+standings.buildAndPrintReport(matchReader.matches);
