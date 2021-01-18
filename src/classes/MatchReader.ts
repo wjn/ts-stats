@@ -3,8 +3,13 @@ import { dateStringToDate } from '../utils';
 import { MatchOutcomes } from '../enums/MatchOutcomes';
 import { MatchDataTuple } from '../typings/MatchDataTuple';
 import { MatchColumnKeys } from '../enums/MatchColumnKeys';
+import { CsvFileReader } from './CsvFileReader';
 
 export class MatchReader {
+  static fromCsv(filename: string): MatchReader {
+    return new MatchReader(new CsvFileReader(filename));
+  }
+
   public matches: MatchDataTuple[] = [];
   constructor(public reader: DataReader) {}
 
